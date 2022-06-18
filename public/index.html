@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listita Canchera</title>
+  <meta name="description" content="Tu lista de compras siempre cerca" />
+    <meta name="keywords" content="compras, supermercado, productos, app" />
+    <meta name="author" content="Luciano Lo Presti" />
+    <meta name="copyright" content="Luciano Lo Presti" />
+    <meta name="robots" content="index nofollow" />
+    <link rel="icon" href="images/icono.png" type="image/png">
+    <meta property="og:title" content="Listita Canchera" />
+    <meta property="og:description" content="Tu lista de compras siempre cerca" />
+    <meta property="og:type" content="webapp" />
+    <meta property="og:image" content="https://listitacanchera.web.app/images/icono.png" />
+    <meta property="og:URL" content="https://listitacanchera.web.app/" /> 
+    <meta property="twitter:title" content="Listita Canchera" />
+    <meta property="twitter:description" content="Tu lista de compras siempre cerca" />
+    <meta property="twitter:type" content="webapp" />
+    <meta property="twitter:image" content="https://listitacanchera.web.app/images/icono.png" />
+    <meta property="twitter:URL" content="https://listitacanchera.web.app/" /> 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <section class="header">
+    <img src="images/icono.png" width="40px"alt="">
+    <h1><strong>Listita Canchera</strong></h1>
+  </section>
+  <section class="container" id="home">
+    <div class="container empty" id="emptylist">
+      <h2>¡Hey, no tenés nada que comprar!</h2>
+      <img src="images/cat.png" alt="Gato triste">
+    </div>
+  </section>
+<button type="button" class="addbtn" id="addbtn"  onclick=showForm()>+</button>
+<section class="container addproduct" id="addproduct">
+  <div class="center">
+    <div class="ingreseProducto">
+      <input type="text" id="producto" autocomplete="off" placeholder="Producto" required>
+    </div>
+    <div class="iconselection">
+      <select class="form-select" aria-label="Default select example" id="icono" placeholder="Categoría">
+        <option selected>Categoría</option>
+        <option value="carne.png">Carne</option>
+        <option value="verduras.png">Verdulería</option>
+        <option value="condimento.png">Condimentos</option>
+        <option value="lacteos.png">Lácteos</option>
+        <option value="pasta.png">Pastas</option>
+        <option value="golosinas.png">Golosinas</option>
+        <option value="beer.png">Bebidas</option>
+        <option value="limpieza.png">Limpieza</option>
+      </select>
+    </div>
+    <div class="descriptionproduct">
+      <input type="text" id="descripcion" autocomplete="off" placeholder="Descripción (opcional)" required>
+    </div>
+    <div class="save">
+      <button type="button" id="savebtn">Agregar</button>
+    </div>
+  </div>
+</section>
+<section id="listado">
+  <ul class="list-group">
+  </ul>
+</section>
+<section class="container detalles" id="detalles">
+  <button id="closebtn">x</button>
+  <div class="center" id="detalle">
+
+  </div>
+  </section>
+  <script>
+    let emptylist = document.getElementById('emptylist')
+    let addproduct = document.getElementById('addproduct') 
+    let listado = document.getElementById('listado')
+    let detalles = document.getElementById('detalles')
+    let detalle = document.getElementById('detalle')
+    let home = document.getElementById('home')
+    let addbtn = document.getElementById('addbtn')
+    let savebtn = document.getElementById('savebtn')
+    let closebtn = document.getElementById('closebtn')
+    
+    let producto = document.getElementById('producto')  
+    let icono = document.getElementById('icono') 
+    let descripcion = document.getElementById('descripcion')
+    let listadoStorage = []
+
+      function showForm(){
+      producto.value = ''
+      icono.value = 'Categoría'
+      descripcion.value = ''
+      home.style.display = "none"
+      addbtn.style.display = 'none'
+      listado.style.display = 'none'
+      addproduct.style.display = 'block'
+    }
+    
+    savebtn.addEventListener('click', guardar)
+      function guardar(){
+        let prod = producto.value
+        let icon = icono.value
+        let desc = descripcion.value
+        let modelo = `<li class="list-group-item"><img src="images/${icon}" width="40px" alt="">  ${prod} <button id="detallesBtn" onclick="Ver_detalle('${icon}','${prod}','${desc}')"><</button></li>`
+        listado.innerHTML += modelo
+        addproduct.style.display = 'none'
+        listado.style.display = 'block'
+        addbtn.style.display = 'block'
+        home.style.display = "none"   
+        listadoStorage.push(modelo)
+        localStorage.setItem('listaCompras', listadoStorage)     
+      }
+      function Ver_detalle(){
+          let prod = producto.value
+          let icon = icono.value
+          let desc = descripcion.value
+          let ficha = `<div class="iconoficha">
+                      <img src="images/${icon}" width="80px" alt="">
+                      </div>
+                      <div class="productoficha">
+                        <h1>${prod}</h1>
+                      </div>
+                      <div class="descripcionficha">
+                        <p>${desc}</p>
+                      </div>`
+          detalle.innerHTML = ficha
+          detalles.style.display = 'block'
+          addbtn.style.display = 'none'
+          addproduct.style.display = 'none'
+          listado.style.display = 'none'        
+      }
+      closebtn.addEventListener('click', function(){
+        detalles.style.display = 'none'
+        addbtn.style.display = 'block'
+        addproduct.style.display = 'none'
+        listado.style.display = 'block'   
+      })
+      let desdeStorage = localStorage.getItem('listaCompras')
+      if (desdeStorage){
+        listadoStorage.push(desdeStorage)
+        listado.style.display = 'block'
+        home.style.display = "none"
+        listado.innerHTML += desdeStorage.split(',').join('')
+        
+      }
+  </script>
+</body>
+</html>
+
